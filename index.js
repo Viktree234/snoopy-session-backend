@@ -1,3 +1,19 @@
+const express = require("express");
+const { default: makeWASocket, useMultiFileAuthState, fetchLatestBaileysVersion } = require("@whiskeysockets/baileys");
+const qrcode = require("qrcode-terminal");
+const fs = require("fs");
+const path = require("path");
+const randomstring = require("randomstring");
+
+const app = express(); // ✅ This must be BEFORE using `app.get(...)`
+const port = process.env.PORT || 3000;
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("✅ Snoopy Session Generator is Running!");
+});
+
 app.get("/generate", async (req, res) => {
   try {
     const sessionId = randomstring.generate(6).toLowerCase();
@@ -41,4 +57,8 @@ app.get("/generate", async (req, res) => {
     console.error("Error generating session:", error);
     res.status(500).json({ status: "error", error: error.message });
   }
+});
+
+app.listen(port, () => {
+  console.log(`🚀 Snoopy Session Backend running on port ${port}`);
 });
